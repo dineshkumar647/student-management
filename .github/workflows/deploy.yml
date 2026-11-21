@@ -1,5 +1,5 @@
 
-name: Deploy React App to GitHub Pages
+name: Deploy Student Management System
 
 on:
   push:
@@ -28,11 +28,15 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: client/package-lock.json
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install Frontend Dependencies
+        working-directory: client
+        run: npm ci
 
       - name: Build React Application
+        working-directory: client
         run: npm run build
 
       - name: Setup GitHub Pages
@@ -41,7 +45,7 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./dist
+          path: client/build
 
   deploy:
     needs: build
